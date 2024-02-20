@@ -93,30 +93,37 @@ const CourseInfo = {
         if (submission_date > due_date) {
           if (!acquired_points_object.hasOwnProperty(student_submissions[i].learner_id)) {
             acquired_points_object[student_submissions[i].learner_id] = student_submissions[i].submission.score - 10
+            possible_points_object[student_submissions[i].learner_id] = course_assignments.assignments[(student_submissions[i].assignment_id) - 1].points_possible;
           } else {
             acquired_points_object[student_submissions[i].learner_id] += student_submissions[i].submission.score - 10
+            possible_points_object[student_submissions[i].learner_id] += course_assignments.assignments[(student_submissions[i].assignment_id) - 1].points_possible;
           }
         } else {
           if (!acquired_points_object.hasOwnProperty(student_submissions[i].learner_id)) {
             acquired_points_object[student_submissions[i].learner_id] = student_submissions[i].submission.score;
+            possible_points_object[student_submissions[i].learner_id] = course_assignments.assignments[(student_submissions[i].assignment_id) - 1].points_possible;
           } else {
             acquired_points_object[student_submissions[i].learner_id] += student_submissions[i].submission.score;
+            possible_points_object[student_submissions[i].learner_id] += course_assignments.assignments[(student_submissions[i].assignment_id) - 1].points_possible;
           }
         }
-        possible_points_object[student_submissions[i].learner_id] += course_assignments.assignments[(student_submissions[i].assignment_id) - 1].points_possible;
+        // console.log("this is possb pts", course_assignments.assignments[(student_submissions[i].assignment_id) - 1].points_possible)
       } 
       const grades_object = {};
+      // console.log("this is the acquired points object", acquired_points_object)
+      // console.log("this is the possible points object", possible_points_object)
       for (student in acquired_points_object) {
         grades_object[student] = acquired_points_object[student] / possible_points_object[student]
       }
-      console.log("here is the grades object ", grades_object)
+      // console.log("here is the grades object ", grades_object)
       return grades_object
     }
 
     for (learner of learners) {
+      console.log("this is learner", learner)
       let student_object = {}
-      let average_grade = weightedGrades(ag, submissions).learner
-      // console.log("the average grade is ", average_grade)
+      let average_grade = weightedGrades(ag, submissions)[learner]
+      console.log("the average grade is ", average_grade)
       student_object.id = learner
       student_object.avg = average_grade
       for (let i = 0; i < submissions.length; i++) {
